@@ -14,6 +14,7 @@ This project is an archetype for [Apache Maven][maven]. Please install before pr
 
 ## Usage
 
+### Create the project
  1. Check out the source code with
 
      git clone https://github.com/mnrasul/sparkjava-quickstart-archetype.git
@@ -24,17 +25,20 @@ This project is an archetype for [Apache Maven][maven]. Please install before pr
      
  3. Create a new SparkJava project with
  
-     mvn archetype:generate -DarchetypeGroupId=com.github.mnrasul.archetypes \ 
+     mvn archetype:generate -DarchetypeGroupId=com.github.mnrasul.archetypes \
      -DarchetypeArtifactId=sparkjava-quickstart-archetype -DarchetypeVersion=0.0.1-SNAPSHOT \
-     -DgroupId=org.yourcompany.somegroup -DartifactId=YourApp -Dversion=0.0.1-SNAPSHOT
+     -DgroupId=org.yourcompany.somegroup -DartifactId=YourApp -Dversion=0.0.1-SNAPSHOT \
     
-  4. Develop, develop, develop! ;)
+
+### Run the project
   
-  5. Create an executable jar containing all dependencies as easy as
+  1. Develop, develop, develop! ;)
+  
+  2. Create an executable jar containing all dependencies as easy as
      
       mvn clean package
      
-  6. Run the JAR with
+  3. Run the JAR with
   
       java -jar target/YourApp-0.0.1-SNAPSHOT.jar  
 
