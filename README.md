@@ -40,8 +40,32 @@ This project is an archetype for [Apache Maven][maven]. Please install before pr
      
   3. Run the JAR with
   
-      java -jar target/YourApp-0.0.1-SNAPSHOT.jar  
+      java -jar target/YourApp-0.0.1-SNAPSHOT.jar
+      
+### Create an RPM
 
+You can create RPMs for distributions which use [upstart][upstart]. That is Fedora from 9-15, the CentOS and RedHat 6 series and it's derivates.
 
+To create the RPM, run maven with
+
+    mvn clean package -P rpmUpstart
+
+The RPM and the specfile are created below
+
+    ${project.build.directory}/rpm/${project.artifactId}
+
+You can install this rpm with
+
+    yum localinstall /path/to/your.rpm
+    
+It will start automatically during system boot. For configuration of JAVA_OPTS and more please see
+
+    /etc/sysconfig/${project.artifactId}
+
+Output will be logged in
+
+    /var/log/${project.artifactId}.log
+    
 [spark]: http://www.sparkjava.com
 [maven]: http://maven.apache.org
+[upstart]: http://en.wikipedia.org/wiki/Upstart
