@@ -62,6 +62,22 @@ It will start automatically during system boot. For configuration of JAVA_OPTS a
 
     /etc/sysconfig/${project.artifactId}
 
+To create the RPM, run maven with
+
+    mvn clean package -P rpmUpstart
+
+The RPM and the specfile are created below
+
+    ${project.build.directory}/rpm/${project.artifactId}
+
+You can install this rpm with
+
+    yum localinstall /path/to/your.rpm
+    
+It will start automatically during system boot. For configuration of JAVA_OPTS and more please see
+
+    /etc/sysconfig/${project.artifactId}
+
 Output will be logged in
 
     /var/log/${project.artifactId}.log
