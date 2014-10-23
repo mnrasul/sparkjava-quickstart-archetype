@@ -1,0 +1,9 @@
+# Configure additional JAVA_OPTS
+# for ${artifactId} 
+JAVA_OPTS="$JAVA_OPTS"
+
+# Configure command line options passed to SuperWebApp
+# for example the path to the config file
+# 
+# CLI_OPTS="-f /etc/${artifactId}.properties
+CLI_OPTS=""

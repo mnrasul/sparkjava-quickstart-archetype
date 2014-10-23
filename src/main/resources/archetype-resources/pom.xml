@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>${groupId}</groupId>
 	<artifactId>${artifactId}</artifactId>
@@ -23,29 +22,16 @@
 			<version>1.7.2</version>
 		</dependency>
 	</dependencies>
+
 	<build>
+		<resources>
+			<resource>
+				<directory>src/rpm</directory>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/rpm</targetPath>
+			</resource>
+		</resources>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.3.1</version>
-				<executions>
-					<execution>
-						<id>enforce-java</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireJavaVersion>
-									<version>1.8</version>
-								</requireJavaVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -69,19 +55,109 @@
 								</filter>
 							</filters>
 							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>org.example.webapps.App</Main-Class>
+										<Main-Class>${package}.App</Main-Class>
 									</manifestEntries>
 								</transformer>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<version>2.1-alpha-4</version>
+				<configuration>
+					<mappings></mappings>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>rpmUpstart</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>rpm-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>rpm-upstart</id>
+								<phase>package</phase>
+								<goals>
+									<goal>rpm</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<license>${project.license.name}</license>
+							<defaultDirmode>0755</defaultDirmode>
+							<defaultFilemode>0644</defaultFilemode>
+							<group>Application/Internet</group>
+							<prefix>/usr</prefix>
+							<url>${project.url}</url>
+							<!-- for whatever reasons, mappings can't be inherited from the default -->
+							<preremove>#!/bin/bash
+								stop ${artifactId}</preremove>
+							<preinstall>#!bin/bash
+								
+								if  [ -e /etc/init/${artifactId} ];
+								then
+									stop ${artifactId} 
+								fi</preinstall>
+							<mappings>
+								<mapping>
+									<directory>/usr/libexec/</directory>
+									<sources>
+										<source>
+											<location>${project.build.directory}/${project.build.finalName}.${project.packaging}</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/etc/sysconfig</directory>
+									<username>root</username>
+									<groupname>root</groupname>
+									<filemode>0600</filemode>
+									<configuration>noreplace</configuration>
+									<sources>
+										<source>
+											<location>${project.build.directory}/rpm/sysconfig</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/etc/default</directory>
+									<username>root</username>
+									<groupname>root</groupname>
+									<filemode>0600</filemode>
+									<sources>
+										<source>
+											<location>${project.build.directory}/rpm/default</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/etc/init</directory>
+									<username>root</username>
+									<groupname>root</groupname>
+									<filemode>0644</filemode>
+									<sources>
+										<source>
+											<location>${project.build.directory}/rpm/upstart/${artifactId}.conf</location>
+										</source>
+									</sources>
+								</mapping>
+							</mappings>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

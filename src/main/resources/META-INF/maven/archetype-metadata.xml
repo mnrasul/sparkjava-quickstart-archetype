@@ -9,29 +9,12 @@
         <include>**/*.java</include>
       </includes>
     </fileSet>
-    <fileSet encoding="UTF-8">
+    <fileSet filtered="true" encoding="UTF-8">
       <directory>src/rpm</directory>
       <includes>
-        <include>**/*.</include>
-      </includes>
-    </fileSet>
-    <fileSet encoding="UTF-8">
-      <directory>.settings</directory>
-      <includes>
-        <include>**/*.prefs</include>
-      </includes>
-    </fileSet>
-    <fileSet filtered="true" encoding="UTF-8">
-      <directory></directory>
-      <includes>
-        <include>.classpath</include>
-        <include>.project</include>
-      </includes>
-    </fileSet>
-    <fileSet encoding="UTF-8">
-      <directory></directory>
-      <includes>
-        <include>.gitignore</include>
+        <include>**/*</include>
+        <include>**/*.service</include>
+        <include>**/*.conf</include>
       </includes>
     </fileSet>
   </fileSets>
